@@ -1,0 +1,59 @@
+<div class="container">
+    <h2 oda-label="home.title"></h2>
+
+    <div class="row">
+        <div class="col-md-12">
+            <span oda-label="home.hello"></span>
+            <br>
+            <br>
+        </div>
+        <div class="col-md-12" id="divMain">
+            <oda-loading></oda-loading>
+        </div>
+    </div>
+</div>
+
+<script>
+    $.Oda.App.Controller.Home.start();
+</script>
+
+<script id="tlpDivLogBonita" type="text/template">
+    <span oda-label="home.helloLogBonita"></span>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="logBonita" oda-label="home.logBonita">home.logBonita</label>
+                <input required type="text" value="fabrice.rosito" class="form-control" oda-input-text="logBonita" oda-input-text-tips="home.logBonita-tips" oda-input-text-placeholder="home.logBonita-placeholder" oda-input-text-check="Oda.Regexs:noInjection">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="passBonita" oda-label="home.passBonita">home.passBonita</label>
+                <input required type="text" value="bpm" class="form-control" oda-input-text="passBonita" oda-input-text-tips="home.passBonita-tips" oda-input-text-placeholder="home.passBonita-placeholder" oda-input-text-check="Oda.Regexs:noInjection">
+            </div>
+        </div>
+    </div>
+    <button type="button" oda-submit="submit" onclick="$.Oda.App.Controller.Home.logBonita();" class="btn btn-primary disabled" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <label oda-label="oda-main.bt-submit"></label></button>
+</script>
+
+<script id="tlpDivActivities" type="text/template">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="startDate" oda-label="home.startDate">home.startDate</label>
+                <input required type="date" class="form-control" oda-input-text="startDate" oda-input-text-check="Oda.Regexs:noInjection">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="endDate" oda-label="home.endDate">home.endDate</label>
+                <input required value="{{endDate}}" type="date" class="form-control" oda-input-text="endDate" oda-input-text-check="Oda.Regexs:noInjection">
+            </div>
+        </div>
+    </div>
+    <button type="button" oda-submit="submit" onclick="$.Oda.App.Controller.Home.displayActivities();" class="btn btn-primary disabled" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <label oda-label="home.getData"></label></button><br><br>
+    <div class="row">
+        <div class="col-md-12" id="divTabActivities">
+        </div>
+    </div>
+</script>

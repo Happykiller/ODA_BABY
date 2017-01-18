@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule resources/api/rest/ /.../vendor/happykiller/oda/resources/api/rest/index.php [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule api/rest/ /.../api/rest/index.php [QSA,L]
+
+</IfModule>

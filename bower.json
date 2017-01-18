@@ -1,0 +1,20 @@
+{
+  "name": "baby",
+  "version": "0.0.1",
+  "homepage": "http://baby.happykiller.net",
+  "authors": ["Fabrice Rosito <fabrice.rosito@gmail.com>"],
+  "description": "Service de gestion pour bb",
+  "keywords": ["baby"],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules"
+  ],
+  "devDependencies": {
+    "qunit": "latest"
+  },
+  "dependencies": {
+    "Oda": "*"
+  }
+}

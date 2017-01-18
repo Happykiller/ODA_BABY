@@ -1,0 +1,17 @@
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+bower_components
+bower_components/*
+server/vendor
+server/vendor/*
+node_modules
+node_modules/*
+config/config.js
+server/config/config.php
+*.lock
+server/resources/*
+*.log

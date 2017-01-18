@@ -1,0 +1,33 @@
+[
+    {
+        "groupName" : "home"
+        , "fr" : {
+            "title" : "Accueil",
+            "hello" : "Bonjour avec le FrameWork Oda",
+            "helloLogBonita" : "Merci de vous identifier sur BB",
+            "logBonita": "Identifiant",
+            "logBonita-tips": "Identifiant",
+            "logBonita-placeholder": "Identifiant",
+            "passBonita": "Mot de passe",
+            "passBonita-tips": "Identifiant",
+            "passBonita-placeholder": "Identifiant",
+            "startDate": "Date de début",
+            "endDate": "Date de fin",
+            "getData": "Obtenir données"
+        }
+        , "en" : {
+            "title" : "Home",
+            "hello" : "Hello with Oda FrameWork",
+            "helloLogBonita" : "Please login on BB",
+            "logBonita": "Login",
+            "logBonita-tips": "Login",
+            "logBonita-placeholder": "Login",
+            "passBonita": "Password",
+            "passBonita-tips": "Password",
+            "passBonita-placeholder": "Password",
+            "startDate": "Start date",
+            "endDate": "End date",
+            "getData": "Get datas"
+        }
+    }
+]
