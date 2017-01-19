@@ -13,7 +13,8 @@
             "passBonita-placeholder": "Identifiant",
             "startDate": "Date de début",
             "endDate": "Date de fin",
-            "getData": "Obtenir données"
+            "getData": "Obtenir données",
+            "camCategory": "Répartition par catégorie"
         }
         , "en" : {
             "title" : "Home",
@@ -27,7 +28,8 @@
             "passBonita-placeholder": "Password",
             "startDate": "Start date",
             "endDate": "End date",
-            "getData": "Get datas"
+            "getData": "Get datas",
+            "camCategory": "Breakdown by category"
         }
     }
 ]

@@ -35,12 +35,19 @@
          */
         startApp: function () {
             try {
+                $.Oda.Router.addDependencies("alasql", {
+                    ordered : true,
+                    "list" : [
+                        { "elt" : $.Oda.Context.rootPath + $.Oda.Context.vendorName + "/alasql/dist/alasql.min.js", "type" : "script"}
+                    ]
+                });
+
                 $.Oda.Router.addRoute("home", {
                     "path" : "partials/home.html",
                     "title" : "home.title",
                     "urls" : ["","home"],
                     "middleWares":["support","auth"],
-                    "dependencies" : ["dataTables"]
+                    "dependencies" : ["dataTables", "alasql", "hightcharts"]
                 });
 
                 $.Oda.Router.startRooter();
@@ -54,6 +61,8 @@
 
         "Controller" : {
             BonitaSession: {},
+            BonitaActivities: [],
+            BonitaActivitiesFilters: {},
             "Home": {
                 /**
                  * @returns {$.Oda.App.Controller.Home}
@@ -171,9 +180,24 @@
                             headers: {'X-Bonita-API-Token': $.Oda.App.Controller.BonitaSession.apiToken},
                             xhrFields: {withCredentials: true},
                             success: function(data, textStatus, jqXHR) {
+                                if(data.length > 0){
+                                    $.Oda.App.Controller.Home.displayMenuReport();
+                                }
+
+                                $.Oda.App.Controller.BonitaActivities = data;
                                 var objDataTable = $.Oda.Tooling.objDataTableFromJsonArray(data);
                                 var strhtml = '<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered hover" id="tabActivities">';
-                                strhtml += '<tfoot><tr><th>1</th><th oda-attr="select" oda-attr-value="category">2</th><th oda-attr="select" oda-attr-value="subcategory">3</th><th oda-attr="none">4</th><th oda-attr="none">5</th><th oda-attr="select" oda-attr-value="location">6</th><th oda-attr="select" oda-attr-value="consultant">7</th><th>8</th><th>9</th></tr></tfoot></table>';
+                                strhtml += '<tfoot><tr>'; 
+                                strhtml += '<th oda-attr-value="customer"></th>'; 
+                                strhtml += '<th oda-attr="select" oda-attr-value="category"></th>'; 
+                                strhtml += '<th oda-attr="none"></th>'; 
+                                strhtml += '<th oda-attr="none"></th>'; 
+                                strhtml += '<th oda-attr="none"></th>'; 
+                                strhtml += '<th oda-attr="select" oda-attr-value="location"></th>'; 
+                                strhtml += '<th oda-attr="none"></th>'; 
+                                strhtml += '<th oda-attr-value="description"></th>'; 
+                                strhtml += '<th oda-attr-value="customerDescription"></th>'; 
+                                strhtml += '</tr></tfoot></table>';
                                 $('#divTabActivities').html(strhtml);
 
                                 var oTable = $('#tabActivities').dataTable({
@@ -268,13 +292,18 @@
 
                                 $("#tabActivities tfoot th").each(function (i) {
                                     var valOdaAttri = $(this).attr("oda-attr");
+                                    var odaAttriValue = $(this).attr("oda-attr-value");
+                                    var indexColl = objDataTable.entete[odaAttriValue];
+                                    if(odaAttriValue !== undefined){
+                                        $.Oda.App.Controller.BonitaActivitiesFilters[odaAttriValue] = "";
+                                    }
                                     if (valOdaAttri == "select") {
-                                        var odaAttriValue = $(this).attr("oda-attr-value");
-                                        var indexColl = objDataTable.entete[odaAttriValue];
-                                        var select = $('<select data-mini="true"><option></option></select>')
+                                        var select = $('<select data-mini="true" oda-filter="'+odaAttriValue+'"><option></option></select>')
                                             .appendTo($(this).empty())
                                             .on('change', function () {
+                                                var odaAttriValue = $(this).attr("oda-filter");
                                                 var val = $(this).val();
+                                                $.Oda.App.Controller.BonitaActivitiesFilters[odaAttriValue] = val;
                                                 table.column(i)
                                                     .search(val ? '^' + $(this).val() + '$' : val, true, false)
                                                     .draw();
@@ -291,12 +320,15 @@
                                             console.error('error for build list with the coll:'+odaAttriValue);
                                         }
                                     } else if (valOdaAttri !== "none") {
-                                        $('<input type="text" placeholder="Search" size="4"/>')
+                                        $('<input oda-filter="'+odaAttriValue+'" type="text" placeholder="Search" size="4"/>')
                                             .appendTo($(this).empty())
                                             .on('keyup change', function () {
+                                                var odaAttriValue = $(this).attr("oda-filter");
+                                                var val = $(this).val();
+                                                $.Oda.App.Controller.BonitaActivitiesFilters[odaAttriValue] = val;
                                                 table
                                                     .column(i)
-                                                    .search(this.value)
+                                                    .search(val)
                                                     .draw();
                                             });
                                     } else {
@@ -313,7 +345,79 @@
                         $.Oda.Log.error("$.Oda.App.Controller.Home.displayActivities : " + er.message);
                         return null;
                     }
-                }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayMenuReport: function () {
+                    try {
+                        var strHtml = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpDivMenuReports"
+                        });
+                        $.Oda.Display.render({id:"divMenuReports", html: strHtml});
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayMenuReport : " + er.message);
+                        return null;
+                    }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayReport: function () {
+                    try {
+                        var strFilters = "";
+                        for(var key in $.Oda.App.Controller.BonitaActivitiesFilters){
+                            var filter = $.Oda.App.Controller.BonitaActivitiesFilters[key];
+                            if(filter !== ""){
+                                if(key === "customer"){
+                                    strFilters += " AND customer->displayName like '%"+filter+"%' ";
+                                }else{
+                                    strFilters += " AND "+key+" like '%"+filter+"%' ";
+                                }
+                            }
+                        }
+                        var req = 'SELECT category as name, COUNT(*) AS y FROM ? WHERE 1=1 '+strFilters+' GROUP BY category';
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        Highcharts.chart('divReport', {
+                            chart: {
+                                plotBackgroundColor: null,
+                                plotBorderWidth: null,
+                                plotShadow: false,
+                                type: 'pie'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","camCategory")
+                            },
+                            tooltip: {
+                                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                            },
+                            plotOptions: {
+                                pie: {
+                                    allowPointSelect: true,
+                                    cursor: 'pointer',
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                        style: {
+                                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                        }
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'cate',
+                                colorByPoint: true,
+                                data: result
+                            }]
+                        });
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayReport : " + er.message);
+                        return null;
+                    }
+                },
             }
         }
     };
