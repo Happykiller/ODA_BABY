@@ -51,19 +51,61 @@
             </div>
         </div>
     </div>
-    <button type="button" oda-submit="submit" onclick="$.Oda.App.Controller.Home.displayActivities();" class="btn btn-primary disabled" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <label oda-label="home.getData"></label></button><br><br>
+    <button type="button" oda-submit="submit" onclick="$.Oda.App.Controller.Home.displayActivities();" class="btn btn-primary disabled center-block" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <label oda-label="home.getData"></label></button><br><br>
     <div class="row">
         <div class="col-md-12" id="divTabActivities">
         </div>
     </div>
-    <div id="divMenuReports">
-
-    </div>
-    <div id="divReport">
-
-    </div>
+    <div id="divMenuReports"></div>
+    <div id="divReport"></div>
 </script>
 
 <script id="tlpDivMenuReports" type="text/template">
-    <button type="button" onclick="$.Oda.App.Controller.Home.displayReport('camCategory');" class="btn btn-primary"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> <label oda-label="home.camCategory"></label></button><br><br>
+<div class="row">
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportCamCategory();" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.camCategory"></label></button><br><br>
+    </div>
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportBillable();" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.billable"></label></button><br><br>
+    </div>
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportAllExp();" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.allXp"></label></button><br><br>
+    </div>
+</div>
+</script>
+
+<script id="tlpDivReportCamCategory" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloCamCategory"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
+    </div>
+</div>
+</script>
+
+<script id="tlpDivReportBillable" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloCamCategory"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <span>worktime: {{workTime}}h</span><br>
+        <span>exp: {{exp}}h</span><br>
+        <span>billable: {{billable}}%</span><br>
+    </div>
+</div>
+</script>
+
+<script id="tlpDivReportAllExp" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        sonn
+    </div>
+</div>
 </script>
