@@ -272,13 +272,17 @@
                                         },
                                         {
                                             "mRender": function (data, type, row) {
-                                                return row[$.Oda.App.Controller.BonitaActivitiesObjTable.entete["description"]];
+                                                var desc = row[$.Oda.App.Controller.BonitaActivitiesObjTable.entete["description"]];
+                                                var str = $.Oda.Tooling.replaceAll({str : desc, find : 'Description: ', by : ''});
+                                                return str;
                                             },
                                             "aTargets": [7]
                                         },
                                         {
                                             "mRender": function (data, type, row) {
-                                                return row[$.Oda.App.Controller.BonitaActivitiesObjTable.entete["customerDescription"]];
+                                                var desc = row[$.Oda.App.Controller.BonitaActivitiesObjTable.entete["customerDescription"]];
+                                                var str = $.Oda.Tooling.replaceAll({str : desc, find : 'Customer Description: ', by : ''});
+                                                return str;
                                             },
                                             "aTargets": [8]
                                         }
