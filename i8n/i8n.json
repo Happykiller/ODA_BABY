@@ -23,7 +23,10 @@
             "averageBillable": "Moyenne : ",
             "helloAllExp": "Expertise = La somme des activités travaillées (pas off) par rapport aux activités d'expertise.",
             "grapAllExp": "L'expertise",
-            "averageAllExp": "Moyenne : "
+            "averageAllExp": "Moyenne : ",
+            "btReportTrip": "Voyage",
+            "helloTrip": "onSite => category != 'TRIP' and location = 'ONSITE' AND customer->displayName != 'Bonitasoft'",
+            "graphTrip": "Voyage"
         }
         , "en" : {
             "title" : "Home",
@@ -44,7 +47,10 @@
             "allXp": "Report expertise",
             "helloBillable": "Billability = The sum of the activities worked (not off) in relation to the billable expertise activities.",
             "grapBillable": "Expertise",
-            "averageBillable": "Average: "
+            "averageBillable": "Average: ",
+            "btReportTrip": "Trip",
+            "helloTrip": "onSite => category != 'TRIP' and location = 'ONSITE' AND customer->displayName != 'Bonitasoft'",
+            "graphTrip": "Trip"
         }
     }
 ]

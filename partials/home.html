@@ -63,13 +63,16 @@
 <script id="tlpDivMenuReports" type="text/template">
 <div class="row">
     <div class="col-md-3">
-        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportCamCategory();" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.camCategory"></label></button><br><br>
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportCamCategory();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.camCategory"></label></button><br><br>
     </div>
     <div class="col-md-3">
-        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportBillable();" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.billable"></label></button><br><br>
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportBillable();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.billable"></label></button><br><br>
     </div>
     <div class="col-md-3">
-        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportAllExp();" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.allXp"></label></button><br><br>
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportAllExp();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.allXp"></label></button><br><br>
+    </div>
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportTrip();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportTrip"></label></button><br><br>
     </div>
 </div>
 </script>
@@ -106,6 +109,19 @@
     <div class="col-md-12">
         <span oda-label="home.helloAllExp"></span><br>
         <span oda-label="home.averageAllExp"></span>{{averageAllExp}}%<br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
+    </div>
+</div>
+</script>
+
+<script id="tlpDivReportTrip" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloTrip"></span><br>
     </div>
 </div>
 <div class="row">

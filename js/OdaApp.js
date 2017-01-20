@@ -768,6 +768,139 @@
                         return null;
                     }
                 },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayReportTrip: function () {
+                    try {
+                        var datas = {};
+
+                        var strHtml = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpDivReportTrip"
+                        });
+                        $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        var req = "SELECT SUM(workHours) as sumTrip, consultant FROM ? WHERE 1=1 AND category = 'TRIP' AND customer->displayName != 'Bonitasoft' GROUP BY consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in result){
+                            var elt = result[index];
+                            datas[elt.consultant] = {
+                                sumTrip: elt.sumTrip
+                            }
+                        }
+
+                        var req = "SELECT SUM(workHours) as sumOnSite, consultant FROM ? WHERE 1=1 AND category != 'TRIP' and location = 'ONSITE' AND customer->displayName != 'Bonitasoft' GROUP BY consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in result){
+                            var elt = result[index];
+                            if(datas[elt.consultant] === undefined){
+                                datas[elt.consultant] = {
+                                    sumTrip: 0
+                                };
+                            }
+                            datas[elt.consultant].sumOnSite = elt.sumOnSite;
+                        }
+
+                        var tabDatas = [];
+                        for(var key in datas){
+                            var elt = datas[key];
+                            if(elt.sumOnSite === undefined){
+                                elt.sumOnSite = 0;
+                            }
+                            elt.name = key;
+                            tabDatas.push(elt);
+                        }
+
+                        var tabDatasOrder = $.Oda.Tooling.order({
+                            collection: tabDatas, compare: function(elt1, elt2){
+                                if((elt1.sumTrip+elt1.sumOnSite) < (elt2.sumTrip+elt2.sumOnSite)){
+                                    return 1;
+                                }else if((elt1.sumTrip+elt1.sumOnSite) > (elt2.sumTrip+elt2.sumOnSite)){
+                                    return -1;
+                                }else{
+                                    return 0;
+                                }
+                            }
+                        });
+
+                        var cate = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            cate.push(elt.name);
+                        }
+
+                        var seriesTrip = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            seriesTrip.push(elt.sumTrip);
+                        }
+
+                        var seriesOnSite = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            seriesOnSite.push(elt.sumOnSite);
+                        }
+
+                        Highcharts.chart('divGraph', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","graphTrip")
+                            },
+                            xAxis: {
+                                categories: cate
+                            },
+                            yAxis: {
+                                min: 0,
+                                stackLabels: {
+                                    enabled: true,
+                                    style: {
+                                        fontWeight: 'bold',
+                                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                                    }
+                                }
+                            },
+                            legend: {
+                                align: 'right',
+                                x: -30,
+                                verticalAlign: 'top',
+                                y: 25,
+                                floating: true,
+                                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                                borderColor: '#CCC',
+                                borderWidth: 1,
+                                shadow: false
+                            },
+                            tooltip: {
+                                headerFormat: '<b>{point.x}</b><br/>',
+                                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                            },
+                            plotOptions: {
+                                column: {
+                                    stacking: 'normal',
+                                    dataLabels: {
+                                        enabled: true,
+                                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'trip',
+                                data: seriesTrip
+                            }, {
+                                name: 'onSite',
+                                data: seriesOnSite
+                            }]
+                        });
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportTrip : " + er.message);
+                        return null;
+                    }
+                },
             }
         }
     };
