@@ -452,36 +452,156 @@
                  */
                 displayReportBillable: function () {
                     try {
-                        var strFilters = "";
-                        for(var key in $.Oda.App.Controller.BonitaActivitiesFilters){
-                            var filter = $.Oda.App.Controller.BonitaActivitiesFilters[key];
-                            if(filter !== ""){
-                                if(key === "customer"){
-                                    strFilters += " AND customer->displayName like '%"+filter+"%' ";
-                                }else{
-                                    strFilters += " AND "+key+" like '%"+filter+"%' ";
-                                }
-                            }
-                        }
-                        var req = "SELECT SUM(workHours) as workTime FROM ? WHERE 1=1 "+strFilters+" AND category not in ('TIME_OFF', 'TRIP', 'EXTERNAL_HELP')";
-                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
-                        var workTime = result[0].workTime;
+                        var datas = {};
 
-                        var req = "SELECT SUM(workHours) as exp FROM ? WHERE 1=1 "+strFilters+" AND category = 'EXP'";
-                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
-                        var exp = result[0].exp;
+                        var delivery = {
+                            workTime:0,
+                            exp:0,
+                            billable:0
+                        };
 
-                        var billable = $.Oda.Tooling.arrondir((exp / workTime) * 100, 2);
+                        var req = "SELECT SUM(workHours) as workTime FROM ? WHERE 1=1 AND category not in ('TIME_OFF', 'TRIP', 'EXTERNAL_HELP')";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+                        delivery.workTime = result[0].workTime;
+
+                        var req = "SELECT SUM(workHours) as exp FROM ? WHERE 1=1 AND category in ('EXP')";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+                        delivery.exp = result[0].exp;
+
+                        delivery.billable = $.Oda.Tooling.arrondir((delivery.exp / delivery.workTime) * 100, 2);
 
                         var strHtml = $.Oda.Display.TemplateHtml.create({
                             template : "tlpDivReportBillable",
                             scope: {
-                                workTime: workTime,
-                                exp: exp,
-                                billable: billable
+                                averageBillable: delivery.billable
                             }
                         });
                         $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        var req = "SELECT SUM(workHours) as workTime, consultant FROM ? WHERE 1=1 AND category not in ('TIME_OFF', 'TRIP', 'EXTERNAL_HELP') GROUP BY consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in result){
+                            var elt = result[index];
+                            datas[elt.consultant] = {
+                                workTime:elt.workTime,
+                                exp:0,
+                                billable:0
+                            }
+                        }
+
+                        var req = "SELECT SUM(workHours) as exp, consultant FROM ? WHERE 1=1 AND category in ('EXP') GROUP BY consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in result){
+                            var elt = result[index];
+                            datas[elt.consultant].exp = elt.exp;
+                        }
+
+                        for(var key in datas){
+                            var elt = datas[key];
+                            elt.billable = $.Oda.Tooling.arrondir((elt.exp / elt.workTime) * 100, 2);
+                        }
+
+                        var tabDatas = [];
+                        for(var key in datas){
+                            var elt = datas[key];
+                            elt.name = key;
+                            tabDatas.push(elt);
+                        }
+
+                        var tabDatasOrder = $.Oda.Tooling.order({
+                            collection: tabDatas, compare: function(elt1, elt2){
+                                if(elt1.billable < elt2.billable){
+                                    return 1;
+                                }else if(elt1.billable > elt2.billable){
+                                    return -1;
+                                }else{
+                                    return 0;
+                                }
+                            }
+                        });
+
+                        var cate = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            cate.push(elt.name);
+                        }
+
+                        var seriesWorkTime = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            seriesWorkTime.push(elt.workTime);
+                        }
+
+                        var seriesExp = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            seriesExp.push(elt.exp);
+                        }
+
+                        Highcharts.chart('divGraph', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","grapBillable")
+                            },
+                            xAxis: {
+                                categories: cate
+                            },
+                            yAxis: {
+                                min: 0,
+                                stackLabels: {
+                                    enabled: true,
+                                    formatter: function () {
+                                        for(var index in tabDatasOrder){
+                                            var elt = tabDatasOrder[index];
+                                            if((elt.workTime + elt.exp) === this.total){
+                                                break;
+                                            }
+                                        }
+                                        return elt.billable+"%";
+                                    },
+                                    style: {
+                                        fontWeight: 'bold',
+                                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                                    }
+                                }
+                            },
+                            legend: {
+                                align: 'right',
+                                x: -30,
+                                verticalAlign: 'top',
+                                y: 25,
+                                floating: true,
+                                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                                borderColor: '#CCC',
+                                borderWidth: 1,
+                                shadow: false
+                            },
+                            tooltip: {
+                                headerFormat: '<b>{point.x}</b><br/>',
+                                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                            },
+                            plotOptions: {
+                                column: {
+                                    stacking: 'normal',
+                                    dataLabels: {
+                                        enabled: true,
+                                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'workTime',
+                                data: seriesWorkTime
+                            }, {
+                                name: 'exp',
+                                data: seriesExp
+                            }]
+                        });
+
                         return this;
                     } catch (er) {
                         $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportBillable : " + er.message);
@@ -493,10 +613,155 @@
                  */
                 displayReportAllExp: function () {
                     try {
+                        var datas = {};
+
+                        var delivery = {
+                            workTime:0,
+                            exp:0,
+                            billable:0
+                        };
+
+                        var req = "SELECT SUM(workHours) as workTime FROM ? WHERE 1=1 AND category not in ('TIME_OFF', 'TRIP', 'EXTERNAL_HELP')";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+                        delivery.workTime = result[0].workTime;
+
+                        var req = "SELECT SUM(workHours) as exp FROM ? WHERE 1=1 AND category in ('EXP', 'EXP-FREE')";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+                        delivery.exp = result[0].exp;
+
+                        delivery.billable = $.Oda.Tooling.arrondir((delivery.exp / delivery.workTime) * 100, 2);
+
                         var strHtml = $.Oda.Display.TemplateHtml.create({
-                            template : "tlpDivReportAllExp"
+                            template : "tlpDivReportAllExp",
+                            scope: {
+                                averageAllExp: delivery.billable
+                            }
                         });
                         $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        var req = "SELECT SUM(workHours) as workTime, consultant FROM ? WHERE 1=1 AND category not in ('TIME_OFF', 'TRIP', 'EXTERNAL_HELP') GROUP BY consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in result){
+                            var elt = result[index];
+                            datas[elt.consultant] = {
+                                workTime:elt.workTime,
+                                exp:0,
+                                billable:0
+                            }
+                        }
+
+                        var req = "SELECT SUM(workHours) as exp, consultant FROM ? WHERE 1=1 AND category in ('EXP', 'EXP-FREE') GROUP BY consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in result){
+                            var elt = result[index];
+                            datas[elt.consultant].exp = elt.exp;
+                        }
+
+                        for(var key in datas){
+                            var elt = datas[key];
+                            elt.billable = $.Oda.Tooling.arrondir((elt.exp / elt.workTime) * 100, 2);
+                        }
+
+                        var tabDatas = [];
+                        for(var key in datas){
+                            var elt = datas[key];
+                            elt.name = key;
+                            tabDatas.push(elt);
+                        }
+
+                        var tabDatasOrder = $.Oda.Tooling.order({
+                            collection: tabDatas, compare: function(elt1, elt2){
+                                if(elt1.billable < elt2.billable){
+                                    return 1;
+                                }else if(elt1.billable > elt2.billable){
+                                    return -1;
+                                }else{
+                                    return 0;
+                                }
+                            }
+                        });
+
+                        var cate = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            cate.push(elt.name);
+                        }
+
+                        var seriesWorkTime = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            seriesWorkTime.push(elt.workTime);
+                        }
+
+                        var seriesExp = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            seriesExp.push(elt.exp);
+                        }
+
+                        Highcharts.chart('divGraph', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","grapAllExp")
+                            },
+                            xAxis: {
+                                categories: cate
+                            },
+                            yAxis: {
+                                min: 0,
+                                stackLabels: {
+                                    enabled: true,
+                                    formatter: function () {
+                                        for(var index in tabDatasOrder){
+                                            var elt = tabDatasOrder[index];
+                                            if((elt.workTime + elt.exp) === this.total){
+                                                break;
+                                            }
+                                        }
+                                        return elt.billable+"%";
+                                    },
+                                    style: {
+                                        fontWeight: 'bold',
+                                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                                    }
+                                }
+                            },
+                            legend: {
+                                align: 'right',
+                                x: -30,
+                                verticalAlign: 'top',
+                                y: 25,
+                                floating: true,
+                                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                                borderColor: '#CCC',
+                                borderWidth: 1,
+                                shadow: false
+                            },
+                            tooltip: {
+                                headerFormat: '<b>{point.x}</b><br/>',
+                                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                            },
+                            plotOptions: {
+                                column: {
+                                    stacking: 'normal',
+                                    dataLabels: {
+                                        enabled: true,
+                                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'workTime',
+                                data: seriesWorkTime
+                            }, {
+                                name: 'exp',
+                                data: seriesExp
+                            }]
+                        });
                         return this;
                     } catch (er) {
                         $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportAllExp : " + er.message);

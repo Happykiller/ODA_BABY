@@ -90,14 +90,13 @@
 <script id="tlpDivReportBillable" type="text/template">
 <div class="row">
     <div class="col-md-12">
-        <span oda-label="home.helloCamCategory"></span>
+        <span oda-label="home.helloBillable"></span><br>
+        <span oda-label="home.averageBillable"></span>{{averageBillable}}%<br>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-        <span>worktime: {{workTime}}h</span><br>
-        <span>exp: {{exp}}h</span><br>
-        <span>billable: {{billable}}%</span><br>
+        <div id="divGraph"></div>
     </div>
 </div>
 </script>
@@ -105,7 +104,13 @@
 <script id="tlpDivReportAllExp" type="text/template">
 <div class="row">
     <div class="col-md-12">
-        sonn
+        <span oda-label="home.helloAllExp"></span><br>
+        <span oda-label="home.averageAllExp"></span>{{averageAllExp}}%<br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
     </div>
 </div>
 </script>

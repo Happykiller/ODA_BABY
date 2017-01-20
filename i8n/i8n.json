@@ -17,7 +17,13 @@
             "camCategory": "Répartition par catégorie",
             "helloCamCategory": "Ce rapport prend en compte les filtres sur la table des données.",
             "billable": "Rapport facturable",
-            "allXp": "Rapport expertise"
+            "allXp": "Rapport expertise",
+            "helloBillable": "Billabilité = La somme des activités travaillées (pas off) par rapport aux activités d'expertise payant.",
+            "grapBillable": "La billabilité",
+            "averageBillable": "Moyenne : ",
+            "helloAllExp": "Expertise = La somme des activités travaillées (pas off) par rapport aux activités d'expertise.",
+            "grapAllExp": "L'expertise",
+            "averageAllExp": "Moyenne : "
         }
         , "en" : {
             "title" : "Home",
@@ -35,7 +41,10 @@
             "camCategory": "Breakdown by category",
             "helloCamCategory": "This report takes into account the filters on the data table.",
             "billable": "Report billable",
-            "allXp": "Report expertise"
+            "allXp": "Report expertise",
+            "helloBillable": "Billability = The sum of the activities worked (not off) in relation to the billable expertise activities.",
+            "grapBillable": "Expertise",
+            "averageBillable": "Average: "
         }
     }
 ]
