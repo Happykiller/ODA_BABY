@@ -75,6 +75,11 @@
         <button type="button" onclick="$.Oda.App.Controller.Home.displayReportTrip();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportTrip"></label></button><br><br>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportCustomers();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportCustomers"></label></button><br><br>
+    </div>
+</div>
 </script>
 
 <script id="tlpDivReportCamCategory" type="text/template">
@@ -122,6 +127,19 @@
 <div class="row">
     <div class="col-md-12">
         <span oda-label="home.helloTrip"></span><br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
+    </div>
+</div>
+</script>
+
+<script id="tlpDivReportCustomers" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloCustomers"></span><br>
     </div>
 </div>
 <div class="row">

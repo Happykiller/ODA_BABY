@@ -26,7 +26,10 @@
             "averageAllExp": "Moyenne : ",
             "btReportTrip": "Voyage",
             "helloTrip": "onSite => category != 'TRIP' and location = 'ONSITE' AND customer->displayName != 'Bonitasoft'",
-            "graphTrip": "Voyage"
+            "graphTrip": "Voyage",
+            "btReportCustomers": "Clients",
+            "helloCustomers": "Nombre de client pour lequel le consultant à enregistré une activité.",
+            "graphCustomers": "Clients"
         }
         , "en" : {
             "title" : "Home",
@@ -50,7 +53,10 @@
             "averageBillable": "Average: ",
             "btReportTrip": "Trip",
             "helloTrip": "onSite => category != 'TRIP' and location = 'ONSITE' AND customer->displayName != 'Bonitasoft'",
-            "graphTrip": "Trip"
+            "graphTrip": "Trip",
+            "btReportCustomers": "Customers",
+            "helloCustomers": "Number of clients for which the consultant has registered an activity.",
+            "graphCustomers": "Customers"
         }
     }
 ]

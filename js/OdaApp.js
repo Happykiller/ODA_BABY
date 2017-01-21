@@ -900,6 +900,89 @@
                         $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportTrip : " + er.message);
                         return null;
                     }
+                },/**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayReportCustomers: function () {
+                    try {
+                        var datas = {};
+
+                        var strHtml = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpDivReportCustomers"
+                        });
+                        $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        var req = "SELECT count(DISTINCT(customer->displayName)) as nb, consultant FROM ? WHERE 1=1 AND customer->displayName != 'Bonitasoft' GROUP BY consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        var tabDatasOrder = $.Oda.Tooling.order({
+                            collection: result, compare: function(elt1, elt2){
+                                if(elt1.nb < elt2.nb){
+                                    return 1;
+                                }else if(elt1.nb > elt2.nb){
+                                    return -1;
+                                }else{
+                                    return 0;
+                                }
+                            }
+                        });
+
+                        var cate = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            cate.push(elt.consultant);
+                        }
+
+                        var series = [];
+                        for(var index in tabDatasOrder){
+                            var elt = tabDatasOrder[index];
+                            series.push(elt.nb);
+                        }
+
+                        Highcharts.chart('divGraph', {
+                            chart: {
+                                type: 'bar'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","graphCustomers")
+                            },
+                            xAxis: {
+                                categories: cate
+                            },
+                            yAxis: {
+                                min: 0
+                            },
+                            plotOptions: {
+                                bar: {
+                                    dataLabels: {
+                                        enabled: true
+                                    }
+                                }
+                            },
+                            legend: {
+                                layout: 'vertical',
+                                align: 'right',
+                                verticalAlign: 'top',
+                                x: -40,
+                                y: 80,
+                                floating: true,
+                                borderWidth: 1,
+                                backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                                shadow: true
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            series: [{
+                                name: $.Oda.I8n.get("home","graphCustomers"),
+                                data: series
+                            }]
+                        });
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportCustomers : " + er.message);
+                        return null;
+                    }
                 },
             }
         }
