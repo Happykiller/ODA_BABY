@@ -3,7 +3,7 @@
 // Library of tools for the exemple
 /**
  * @author FRO
- * @date 15/05/08
+ * @date 17/01/22
  */
 
 (function() {
@@ -379,10 +379,20 @@
                         for(var key in $.Oda.App.Controller.BonitaActivitiesFilters){
                             var filter = $.Oda.App.Controller.BonitaActivitiesFilters[key];
                             if(filter !== ""){
-                                if(key === "customer"){
-                                    strFilters += " AND customer->displayName like '%"+filter+"%' ";
-                                }else{
-                                    strFilters += " AND "+key+" like '%"+filter+"%' ";
+                                switch(key) {
+                                    case "customer":
+                                        strFilters += " AND customer->displayName like '%"+filter+"%' ";
+                                        break;
+                                    case "subcategory":
+                                    case "consultant":
+                                    case "description":
+                                    case "customerDescription":
+                                        strFilters += " AND "+key+" like '%"+filter+"%' ";
+                                        break;
+                                    case "category":
+                                    case "location":
+                                        strFilters += " AND "+key+" = '"+filter+"' ";
+                                        break;
                                 }
                             }
                         }
