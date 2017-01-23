@@ -910,7 +910,8 @@
                         $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportTrip : " + er.message);
                         return null;
                     }
-                },/**
+                },
+                /**
                  * @returns {$.Oda.App.Controller.Home}
                  */
                 displayReportCustomers: function () {
@@ -991,6 +992,105 @@
                         return this;
                     } catch (er) {
                         $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportCustomers : " + er.message);
+                        return null;
+                    }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayReportExpTimeSlice: function () {
+                    try {
+                        var datas = {};
+
+                        var strHtml = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpDivReportExpTimeSlice"
+                        });
+                        $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        for(var index in $.Oda.App.Controller.BonitaActivities){
+                            var elt = $.Oda.App.Controller.BonitaActivities[index];
+                            var href = elt.customer.links[0].href;
+                            var tabHref = href.split("/");
+                            var idDeliv = tabHref[tabHref.length-2];
+                            elt.idDeliv = idDeliv;
+                        }
+
+                        var req = "SELECT workHours, consultant, count(*) as nb FROM ? WHERE 1=1 AND category = 'EXP' GROUP BY workHours, consultant";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        var req = "SELECT DISTINCT workHours FROM ? ORDER BY workHours asc";
+                        var workHours = alasql(req,[result]);
+
+                        var tabWorkHours = [];
+                        var tabIndexWorkHours = {};
+                        for(var index in workHours){
+                            tabIndexWorkHours[workHours[index].workHours] = index;
+                            tabWorkHours.push(workHours[index].workHours);
+                        }
+
+                        var req = "SELECT DISTINCT consultant FROM ? ORDER BY consultant";
+                        var consultants = alasql(req,[result]);
+
+                        var tabConsultants = [];
+                        for(var index in consultants){
+                            tabConsultants.push(consultants[index].consultant);
+                        }
+
+                        var series = [];
+                        var seriesO = [];
+
+                        for(var indexConsultant in tabConsultants){
+                            var serie = {
+                                name: tabConsultants[indexConsultant],
+                                data: []
+                            }
+                            series.push(serie);
+
+                            seriesO[tabConsultants[indexConsultant]] = {};
+                            for(var indexWorkHours in tabWorkHours){
+                                seriesO[tabConsultants[indexConsultant]][tabWorkHours[indexWorkHours]] = 0;
+                            }
+                        }
+
+                        for(var index in result){
+                            var elt = result[index];
+                            seriesO[elt.consultant][elt.workHours] = elt.nb;
+                        }
+
+                        var index = 0;
+                        for(var keyConsultant in seriesO){
+                            for(var keyHours in seriesO[keyConsultant]){
+                                series[index].data[tabIndexWorkHours[keyHours]] = seriesO[keyConsultant][keyHours];
+                            }
+                            index++;
+                        }
+
+                        Highcharts.chart('divGraph', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","graphExpTimeSlice")
+                            },
+                            xAxis: {
+                                categories: tabWorkHours,
+                                crosshair: true
+                            },
+                            yAxis: {
+                                min: 0
+                            },
+                            plotOptions: {
+                                column: {
+                                    pointPadding: 0.2,
+                                    borderWidth: 0
+                                }
+                            },
+                            series: series
+                        });
+
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportExpTimeSlice : " + er.message);
                         return null;
                     }
                 },

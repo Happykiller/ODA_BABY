@@ -79,6 +79,9 @@
     <div class="col-md-3">
         <button type="button" onclick="$.Oda.App.Controller.Home.displayReportCustomers();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportCustomers"></label></button><br><br>
     </div>
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportExpTimeSlice();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportExpTimeSlice"></label></button><br><br>
+    </div>
 </div>
 </script>
 
@@ -140,6 +143,19 @@
 <div class="row">
     <div class="col-md-12">
         <span oda-label="home.helloCustomers"></span><br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
+    </div>
+</div>
+</script>
+
+<script id="tlpDivReportExpTimeSlice" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloExpTimeSlice"></span><br>
     </div>
 </div>
 <div class="row">

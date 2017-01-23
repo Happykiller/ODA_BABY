@@ -29,7 +29,10 @@
             "graphTrip": "Voyage",
             "btReportCustomers": "Clients",
             "helloCustomers": "Nombre de client pour lequel le consultant à enregistré une activité.",
-            "graphCustomers": "Clients"
+            "graphCustomers": "Clients",
+            "btReportExpTimeSlice": "Durée d'expertise",
+            "helloExpTimeSlice": "Nombre d'expertise par tranche d'heure",
+            "graphExpTimeSlice": "Durée d'expertise"
         }
         , "en" : {
             "title" : "Home",
@@ -56,7 +59,10 @@
             "graphTrip": "Trip",
             "btReportCustomers": "Customers",
             "helloCustomers": "Number of clients for which the consultant has registered an activity.",
-            "graphCustomers": "Customers"
+            "graphCustomers": "Customers",
+            "btReportExpTimeSlice": "Duration of expertise",
+            "helloExpTimeSlice": "Number of expertise per hour",
+            "graphExpTimeSlice": "Duration of expertise"
         }
     }
 ]
