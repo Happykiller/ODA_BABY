@@ -15,3 +15,4 @@ server/config/config.php
 *.lock
 server/resources/*
 *.log
+.vscode/*
