@@ -184,21 +184,22 @@
                         });
                         $.Oda.Display.render({id:"divMain", html: strHtml});
                         $.Oda.Scope.Gardian.add({
-                                id : "gActivities",
-                                listElt : ["startDate", "endDate"],
-                                function : function(e){
-                                    if( ($("#startDate").data("isOk"))
-                                        && ($("#endDate").data("isOk")) 
-                                    ){
-                                        $("#submit").btEnable();
-                                    }else{
-                                        $("#submit").btDisable();
-                                        $("#divTabActivities").html("");
-                                        $("#divMenuReports").html("");
-                                        $("#divReport").html("");
-                                    }
+                            id : "gActivities",
+                            listElt : ["startDate", "endDate"],
+                            function : function(e){
+                                console.log("coucou");
+                                if( ($("#startDate").data("isOk"))
+                                    && ($("#endDate").data("isOk")) 
+                                ){
+                                    $("#submit").btEnable();
+                                }else{
+                                    $("#submit").btDisable();
+                                    $("#divTabActivities").html("");
+                                    $("#divMenuReports").html("");
+                                    $("#divReport").html("");
                                 }
-                            });
+                            }
+                        });
                         return this;
                     } catch (er) {
                         $.Oda.Log.error("$.Oda.App.Controller.Home.drawFormActivities : " + er.message);
@@ -1102,22 +1103,19 @@
 
                         Highcharts.chart('divGraph', {
                             chart: {
-                                type: 'column'
+                                type: 'spline'
                             },
                             title: {
                                 text: $.Oda.I8n.get("home","graphExpTimeSlice")
                             },
                             xAxis: {
-                                categories: tabWorkHours,
-                                crosshair: true
-                            },
-                            yAxis: {
-                                min: 0
+                                categories: tabWorkHours
                             },
                             plotOptions: {
-                                column: {
-                                    pointPadding: 0.2,
-                                    borderWidth: 0
+                                spline: {
+                                    marker: {
+                                        enabled: false
+                                    }
                                 }
                             },
                             series: series
