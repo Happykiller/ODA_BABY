@@ -39,6 +39,11 @@
 <script id="tlpDivActivities" type="text/template">
     <div class="row">
         <div class="col-md-6">
+            <p><span oda-label="home.logBonita"></span>: <span style="font-weight: bold;">{{log}}</span><button type="button" oda-submit="submit" onclick="$.Oda.App.Controller.Home.removeLogBonita();" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="startDate" oda-label="home.startDate">home.startDate</label>
                 <input required type="date" class="form-control" oda-input-text="startDate" oda-input-text-check="Oda.Regexs:noInjection">

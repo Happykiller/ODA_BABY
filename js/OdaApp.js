@@ -73,11 +73,15 @@
                     try {
                         $.Oda.App.Controller.BonitaSession = $.Oda.Storage.get("bonitaSession", {});
                         if($.Oda.App.Controller.BonitaSession.apiToken === undefined){
-                            var strHtml = $.Oda.Display.TemplateHtml.create({
-                                template : "tlpDivLogBonita"
-                            });
-                            $.Oda.Display.render({id:"divMain", html: strHtml});
-                            $.Oda.Scope.Gardian.add({
+                            var bonitaSessionAuth = $.Oda.Storage.get("bonitaSessionAuth");
+                            if(bonitaSessionAuth !== null){
+                                $.Oda.App.Controller.Home.logBonita(bonitaSessionAuth);
+                            }else{
+                                var strHtml = $.Oda.Display.TemplateHtml.create({
+                                    template : "tlpDivLogBonita"
+                                });
+                                $.Oda.Display.render({id:"divMain", html: strHtml});
+                                $.Oda.Scope.Gardian.add({
                                     id : "gLogBonita",
                                     listElt : ["logBonita", "passBonita"],
                                     function : function(e){
@@ -90,6 +94,7 @@
                                         }
                                     }
                                 });
+                            }
                         }else{
                             $.Oda.App.Controller.Home.drawFormActivities();
                         }
@@ -102,14 +107,14 @@
                 /**
                  * @returns {$.Oda.App.Controller.Home}
                  */
-                logBonita: function () {
+                logBonita: function (p) {
                     try {
                         $.ajax({
                             url: $.Oda.BonitaContext.host + "loginservice?tenant="+$.Oda.BonitaContext.tenantId,
                             type: "POST",
                             data: {
-                                username: $("#logBonita").val(),
-                                password: $("#passBonita").val(),
+                                username: (p !== undefined)?p.username:$("#logBonita").val(),
+                                password: (p !== undefined)?p.password:$("#passBonita").val(),
                                 redirect: false
                             },
                             xhrFields: {withCredentials: true},
@@ -122,6 +127,7 @@
                                         $.Oda.App.Controller.BonitaSession.apiToken = jqXHR.getResponseHeader('X-Bonita-API-Token');
                                         $.Oda.App.Controller.BonitaSession.sessionInfo = data;
                                         $.Oda.Storage.set("bonitaSession", $.Oda.App.Controller.BonitaSession, 3600);
+                                        $.Oda.Storage.set("bonitaSessionAuth", {username: $("#logBonita").val(), password: $("#passBonita").val()});
                                         $.Oda.App.Controller.Home.drawFormActivities();
                                     }
                                 });
@@ -139,11 +145,40 @@
                 /**
                  * @returns {$.Oda.App.Controller.Home}
                  */
+                removeLogBonita: function () {
+                    try {
+                        $.ajax({
+                            url: $.Oda.BonitaContext.host + "logoutservice?tenant="+$.Oda.BonitaContext.tenantId,
+                            type: "GET",
+                            data: {
+                                redirect: false
+                            },
+                            xhrFields: {withCredentials: true},
+                            success: function(data, textStatus, jqXHR) {
+                                $.Oda.App.Controller.BonitaSession.sessionInfo = {};
+                                $.Oda.Storage.remove("bonitaSession");
+                                $.Oda.Storage.remove("bonitaSessionAuth");
+                                $.Oda.App.Controller.Home.start();
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) {
+                                $.Oda.Display.Notification.errorI8n("home.errorLogBonita");
+                            }
+                        });
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.removeLogBonita : " + er.message);
+                        return null;
+                    }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
                 drawFormActivities: function () {
                     try {
                         var strHtml = $.Oda.Display.TemplateHtml.create({
                             template : "tlpDivActivities",
                             scope: {
+                                log: $.Oda.App.Controller.BonitaSession.sessionInfo.user_name,
                                 endDate: $.Oda.Date.dateFormat(new Date(), "yyyy-mm-dd")
                             }
                         });
