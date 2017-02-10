@@ -189,7 +189,6 @@
                             id : "gActivities",
                             listElt : ["startDate", "endDate"],
                             function : function(e){
-                                console.log("coucou");
                                 if( ($("#startDate").data("isOk"))
                                     && ($("#endDate").data("isOk")) 
                                 ){
