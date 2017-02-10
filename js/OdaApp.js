@@ -127,7 +127,9 @@
                                         $.Oda.App.Controller.BonitaSession.apiToken = jqXHR.getResponseHeader('X-Bonita-API-Token');
                                         $.Oda.App.Controller.BonitaSession.sessionInfo = data;
                                         $.Oda.Storage.set("bonitaSession", $.Oda.App.Controller.BonitaSession, 3600);
-                                        $.Oda.Storage.set("bonitaSessionAuth", {username: $("#logBonita").val(), password: $("#passBonita").val()});
+                                        if(p === undefined){
+                                            $.Oda.Storage.set("bonitaSessionAuth", {username: $("#logBonita").val(), password: $("#passBonita").val()});
+                                        }
                                         $.Oda.App.Controller.Home.drawFormActivities();
                                     }
                                 });
