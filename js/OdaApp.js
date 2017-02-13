@@ -65,6 +65,7 @@
             BonitaActivitiesObjTable: [],
             BonitaActivitiesFilters: {},
             BonitaActivitiesTable: {},
+            Completion:{},
             "Home": {
                 /**
                  * @returns {$.Oda.App.Controller.Home}
@@ -1125,6 +1126,97 @@
                         return this;
                     } catch (er) {
                         $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportExpTimeSlice : " + er.message);
+                        return null;
+                    }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayReportCompletion: function () {
+                    try {
+                        var datas = {};
+
+                        var strHtml = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpDivReportCompletion"
+                        });
+                        $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        var req = "SELECT c.consultant, b.workDate FROM (SELECT DISTINCT workDate FROM ?) b, (SELECT DISTINCT consultant FROM ?) c ORDER BY c.consultant, b.workDate ";
+                        var resultAll = alasql(req,[$.Oda.App.Controller.BonitaActivities, $.Oda.App.Controller.BonitaActivities]);
+
+                        var req = "SELECT workDate, SUM(workHours) as workHours, consultant FROM ? GROUP BY workDate, consultant ORDER BY consultant, workDate ";
+                        var resultRec = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        var req = "SELECT a.consultant, a.workDate, IFNULL(b.workHours,0) as workHours FROM ? a \
+                        LEFT OUTER JOIN ? b \
+                        ON a.consultant = b.consultant AND a.workDate = b.workDate \
+                        ORDER BY a.consultant, a.workDate ";
+                        var resultAllRec = alasql(req,[resultAll, resultRec]);
+
+                        var req = "SELECT workDate, workHours, consultant FROM ? WHERE 1=1 AND workHours < 8";
+                        var result = alasql(req,[resultAllRec]);
+
+                        for(var index in result){
+                            var elt = result[index];
+                            if($.Oda.App.Controller.Completion[elt.consultant] === undefined){
+                                $.Oda.App.Controller.Completion[elt.consultant] = [];
+                            }
+                            $.Oda.App.Controller.Completion[elt.consultant].push({
+                                workDate: elt.workDate,
+                                workHours: elt.workHours
+                            });
+                        }
+
+                        var strHtml = "";
+                        for(var key in $.Oda.App.Controller.Completion){
+                            strHtml += "<ul> " + key;
+                            for(var index in $.Oda.App.Controller.Completion[key]){
+                                var elt = $.Oda.App.Controller.Completion[key][index];
+                                strHtml += "<li>"+$.Oda.Date.dateFormat(elt.workDate, "yyyy-mm-dd")+" - "+elt.workHours+"</li>"
+                            }
+                            strHtml += "</ul>";
+                            strHtml += '<button type="button" onclick="$.Oda.App.Controller.Home.sendCompletion(\''+key+'\');" class="btn btn-primary"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> <label oda-label="home.btSendCompletion"></label></button><br><br>';
+                        }
+
+                        $.Oda.Display.render({id:"divGraph", html: strHtml});
+
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportCompletion : " + er.message);
+                        return null;
+                    }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                sendCompletion: function (p) {
+                    try {
+                        var strHtml = "";
+                        strHtml += "<ul>";
+                        for(var index in $.Oda.App.Controller.Completion[p]){
+                            var elt = $.Oda.App.Controller.Completion[p][index];
+                            strHtml += "<li>"+$.Oda.Date.dateFormat(elt.workDate, "yyyy-mm-dd")+" - "+elt.workHours+"h</li>";
+                        }
+                        strHtml += "</ul>";
+
+                        var strHtmlMail = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpMailCompletion",
+                            scope: {
+                                start: $("#startDate").val(),
+                                end: $("#endDate").val(), 
+                                recs: strHtml
+                            }
+                        });
+
+                        $.Oda.Interface.sendMail({
+                            email_mails_dest: 'fabrice.rosito@gmail.com', 
+                            message_html: strHtmlMail, 
+                            sujet: 'Rapport de completion'
+                        });
+
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.sendCompletion : " + er.message);
                         return null;
                     }
                 },

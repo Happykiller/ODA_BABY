@@ -32,7 +32,11 @@
             "graphCustomers": "Clients",
             "btReportExpTimeSlice": "Durée d'expertise",
             "helloExpTimeSlice": "Nombre d'expertise par tranche d'heure",
-            "graphExpTimeSlice": "Durée d'expertise"
+            "graphExpTimeSlice": "Durée d'expertise",
+            "btReportCompletion": "Complétion",
+            "helloCompletion": "Complétion",
+            "graphCompletion": "Complétion",
+            "btSendCompletion": "Notifier"
         }
         , "en" : {
             "title" : "Home",
@@ -62,7 +66,11 @@
             "graphCustomers": "Customers",
             "btReportExpTimeSlice": "Duration of expertise",
             "helloExpTimeSlice": "Number of expertise per hour",
-            "graphExpTimeSlice": "Duration of expertise"
+            "graphExpTimeSlice": "Duration of expertise",
+            "btReportCompletion": "Completion",
+            "helloCompletion": "Completion",
+            "graphCompletion": "Completion",
+            "btSendCompletion": "Notification"
         }
     }
 ]

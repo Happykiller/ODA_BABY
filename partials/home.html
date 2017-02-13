@@ -87,6 +87,9 @@
     <div class="col-md-3">
         <button type="button" onclick="$.Oda.App.Controller.Home.displayReportExpTimeSlice();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportExpTimeSlice"></label></button><br><br>
     </div>
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportCompletion();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportCompletion"></label></button><br><br>
+    </div>
 </div>
 </script>
 
@@ -168,4 +171,23 @@
         <div id="divGraph"></div>
     </div>
 </div>
+</script>
+
+<script id="tlpDivReportCompletion" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloCompletion"></span><br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
+    </div>
+</div>
+</script>
+
+<script id="tlpMailCompletion" type="text/template">
+Bonjour, voici le rapport de completion pour la période de {{start}} - {{end}}<br>
+{{recs}}
+<p>MERCI de remplir ASAPPPPP</p>
 </script>
