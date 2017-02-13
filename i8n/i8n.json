@@ -36,7 +36,11 @@
             "btReportCompletion": "Complétion",
             "helloCompletion": "Complétion",
             "graphCompletion": "Complétion",
-            "btSendCompletion": "Notifier"
+            "btSendCompletion": "Notifier",
+            "completionMailSubjet": "Rapport de complétion",
+            "completionMailHello": "Bonjour, voici le rapport de completion pour la période de ",
+            "completionMailThx": "MERCI de remplir ASAPPPPP",
+            "completionMailDesc": "Voici la liste des jours pour lesquels vous n'avez pas rempli 8h."
         }
         , "en" : {
             "title" : "Home",
@@ -70,7 +74,11 @@
             "btReportCompletion": "Completion",
             "helloCompletion": "Completion",
             "graphCompletion": "Completion",
-            "btSendCompletion": "Notification"
+            "btSendCompletion": "Notification",
+            "completionMailSubjet": "Report completion",
+            "completionMailHello": "Hello, here is the completion report for the period of ",
+            "completionMailThx": "THX to do ASAPPPPP",
+            "completionMailDesc": "Here is the list of the days for which you did not fill 8 hours."
         }
     }
 ]

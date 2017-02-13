@@ -66,6 +66,23 @@
             BonitaActivitiesFilters: {},
             BonitaActivitiesTable: {},
             Completion:{},
+            ConsultantInfos: {
+                FRO: {
+                    firstName: "Rosito",
+                    lastName: "Fabrice",
+                    mail: "fabrice.rosito@bonitasoft.com"
+                },
+                MKE: {
+                    firstName: "Kettani",
+                    lastName: "Mehdi",
+                    mail: "mehdi.kettani@bonitasoft.com"
+                },
+                MKE: {
+                    firstName: "Curiotto",
+                    lastName: "Enrico",
+                    mail: "enrico.curiotto@bonitasoft.com"
+                }
+            },
             "Home": {
                 /**
                  * @returns {$.Oda.App.Controller.Home}
@@ -1170,13 +1187,15 @@
 
                         var strHtml = "";
                         for(var key in $.Oda.App.Controller.Completion){
-                            strHtml += "<ul> " + key;
+                            strHtml += "<ul> <b>" + key + "</b>";
                             for(var index in $.Oda.App.Controller.Completion[key]){
                                 var elt = $.Oda.App.Controller.Completion[key][index];
                                 strHtml += "<li>"+$.Oda.Date.dateFormat(elt.workDate, "yyyy-mm-dd")+" - "+elt.workHours+"</li>"
                             }
                             strHtml += "</ul>";
-                            strHtml += '<button type="button" onclick="$.Oda.App.Controller.Home.sendCompletion(\''+key+'\');" class="btn btn-primary"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> <label oda-label="home.btSendCompletion"></label></button><br><br>';
+                            if(($.Oda.App.Controller.ConsultantInfos[key] !== undefined) && ($.Oda.App.Controller.ConsultantInfos[key].mail !== undefined)){
+                                strHtml += '<button type="button" onclick="$.Oda.App.Controller.Home.sendCompletion(\''+key+'\');" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-send" aria-hidden="true"></span><label oda-label="home.btSendCompletion"></label> '+key+'</button><br><br>';
+                            }
                         }
 
                         $.Oda.Display.render({id:"divGraph", html: strHtml});
@@ -1196,7 +1215,7 @@
                         strHtml += "<ul>";
                         for(var index in $.Oda.App.Controller.Completion[p]){
                             var elt = $.Oda.App.Controller.Completion[p][index];
-                            strHtml += "<li>"+$.Oda.Date.dateFormat(elt.workDate, "yyyy-mm-dd")+" - "+elt.workHours+"h</li>";
+                            strHtml += "<li>"+$.Oda.Date.dateFormat(elt.workDate, "yyyy-mm-dd")+" - "+elt.workHours+"h/8</li>";
                         }
                         strHtml += "</ul>";
 
@@ -1210,9 +1229,9 @@
                         });
 
                         $.Oda.Interface.sendMail({
-                            email_mails_dest: 'fabrice.rosito@gmail.com', 
+                            email_mails_dest: $.Oda.App.Controller.ConsultantInfos[p].mail, 
                             message_html: strHtmlMail, 
-                            sujet: 'Rapport de completion'
+                            sujet: $.Oda.I8n.get('home','completionMailSubjet')
                         });
 
                         return this;

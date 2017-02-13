@@ -176,7 +176,7 @@
 <script id="tlpDivReportCompletion" type="text/template">
 <div class="row">
     <div class="col-md-12">
-        <span oda-label="home.helloCompletion"></span><br>
+        <p><span oda-label="home.helloCompletion"></span></p>
     </div>
 </div>
 <div class="row">
@@ -187,7 +187,8 @@
 </script>
 
 <script id="tlpMailCompletion" type="text/template">
-Bonjour, voici le rapport de completion pour la période de {{start}} - {{end}}<br>
+<p><span oda-label="home.completionMailHello"></span> <b>{{start}} - {{end}}</b></p>
+<p><span oda-label="home.completionMailDesc"></span></p>
 {{recs}}
-<p>MERCI de remplir ASAPPPPP</p>
+<p><span oda-label="home.completionMailThx"></span></p>
 </script>
