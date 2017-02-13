@@ -1156,6 +1156,7 @@
                         var req = "SELECT workDate, workHours, consultant FROM ? WHERE 1=1 AND workHours < 8";
                         var result = alasql(req,[resultAllRec]);
 
+                        $.Oda.App.Controller.Completion = {};
                         for(var index in result){
                             var elt = result[index];
                             if($.Oda.App.Controller.Completion[elt.consultant] === undefined){
