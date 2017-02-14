@@ -39,8 +39,10 @@
             "btSendCompletion": "Notifier",
             "completionMailSubjet": "Rapport de complétion",
             "completionMailHello": "Bonjour, voici le rapport de completion pour la période de ",
-            "completionMailThx": "MERCI de remplir ASAPPPPP",
-            "completionMailDesc": "Voici la liste des jours pour lesquels vous n'avez pas rempli 8h."
+            "completionMailThx": "MERCI de remplir ASAPPPPP :D",
+            "completionMailDesc": "Voici la liste des jours pour lesquels vous n'avez pas rempli 8h.",
+            "notifSendMailSuccess": "Envoi de la notification avec succès.",
+            "notifSendMailFail": "Envoi de la notification en echec, contacter votre administrateur."
         }
         , "en" : {
             "title" : "Home",
@@ -77,8 +79,10 @@
             "btSendCompletion": "Notification",
             "completionMailSubjet": "Report completion",
             "completionMailHello": "Hello, here is the completion report for the period of ",
-            "completionMailThx": "THX to do ASAPPPPP",
-            "completionMailDesc": "Here is the list of the days for which you did not fill 8 hours."
+            "completionMailThx": "THX to do ASAPPPPP :D",
+            "completionMailDesc": "Here is the list of the days for which you did not fill 8 hours.",
+            "notifSendMailSuccess": "Sending the notification successfully.",
+            "notifSendMailFail": "Sending the notification failed, contact your administrator."
         }
     }
 ]

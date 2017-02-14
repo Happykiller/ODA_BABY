@@ -1228,11 +1228,18 @@
                             }
                         });
 
-                        $.Oda.Interface.sendMail({
+                        var responseSendMail = $.Oda.Interface.sendMail({
                             email_mails_dest: $.Oda.App.Controller.ConsultantInfos[p].mail, 
+                            email_mail_ori: "baby-service-mail@baby.happykiller.net",
                             message_html: strHtmlMail, 
                             sujet: $.Oda.I8n.get('home','completionMailSubjet')
                         });
+
+                        if(responseSendMail.data.resultat){
+                            $.Oda.Display.Notification.successI8n("home.notifSendMailSuccess");
+                        }else{
+                            $.Oda.Display.Notification.successI8n("home.notifSendMailFail");
+                        }
 
                         return this;
                     } catch (er) {
