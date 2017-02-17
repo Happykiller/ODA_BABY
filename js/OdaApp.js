@@ -77,7 +77,7 @@
                     lastName: "Mehdi",
                     mail: "mehdi.kettani@bonitasoft.com"
                 },
-                MKE: {
+                ECU: {
                     firstName: "Curiotto",
                     lastName: "Enrico",
                     mail: "enrico.curiotto@bonitasoft.com"
