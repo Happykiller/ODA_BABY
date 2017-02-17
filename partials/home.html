@@ -90,6 +90,14 @@
     <div class="col-md-3">
         <button type="button" onclick="$.Oda.App.Controller.Home.displayReportCompletion();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportCompletion"></label></button><br><br>
     </div>
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportNewClient();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportNewClient"></label></button><br><br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <button type="button" onclick="$.Oda.App.Controller.Home.displayReportSandBox();" class="btn btn-primary center-block"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> <label oda-label="home.btReportSandBox"></label></button><br><br>
+    </div>
 </div>
 </script>
 
@@ -191,4 +199,30 @@
 <p><span oda-label="home.completionMailDesc"></span></p>
 {{recs}}
 <p><span oda-label="home.completionMailThx"></span></p>
+</script>
+
+<script id="tlpDivReportSandBox" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloSandBox"></span><br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
+    </div>
+</div>
+</script>
+
+<script id="tlpDivReportNewClient" type="text/template">
+<div class="row">
+    <div class="col-md-12">
+        <span oda-label="home.helloNewClient"></span><br>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="divGraph"></div>
+    </div>
+</div>
 </script>

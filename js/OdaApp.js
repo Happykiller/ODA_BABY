@@ -1151,8 +1151,6 @@
                  */
                 displayReportCompletion: function () {
                     try {
-                        var datas = {};
-
                         var strHtml = $.Oda.Display.TemplateHtml.create({
                             template : "tlpDivReportCompletion"
                         });
@@ -1244,6 +1242,150 @@
                         return this;
                     } catch (er) {
                         $.Oda.Log.error("$.Oda.App.Controller.Home.sendCompletion : " + er.message);
+                        return null;
+                    }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayReportNewClient: function () {
+                    try {
+                        var strHtml = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpDivReportNewClient"
+                        });
+                        $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        var req = "SELECT UNIQUE CONCAT(YEAR(workDate), '-', IF(MONTH(workDate) < 10, concat(0, MONTH(workDate)), concat(MONTH(workDate)))) month, 0 nb FROM ? \
+                        ORDER BY month \
+                         \;";
+                        var datas = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        var req = "SELECT month, count(*) nb FROM \
+                        (SELECT customer, CONCAT(YEAR(workDate), '-', IF(MONTH(workDate) < 10, concat(0, MONTH(workDate)), concat(MONTH(workDate)))) month FROM \
+                        (SELECT customer->displayName customer, MIN(workDate) workDate FROM ? GROUP BY customer->displayName)) \
+                        GROUP BY month \
+                        ORDER BY month \
+                         \;";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in datas){
+                            var elt = datas[index];
+                            for(var indexResult in result){
+                                var rec = result[indexResult];
+                                if(elt.month === rec.month){
+                                    elt.nb = rec.nb
+                                }
+                            }
+                        }
+
+                        var cate = [];
+                        for(var index in datas){
+                            var elt = datas[index];
+                            cate.push(elt.month);
+                        }
+
+                        var series = [];
+                        for(var index in datas){
+                            var elt = datas[index];
+                            series.push(elt.nb);
+                        }
+
+                        Highcharts.chart('divGraph', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","graphNewClient")
+                            },
+                            xAxis: {
+                                categories: cate
+                            },
+                            yAxis: {
+                                min: 0
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            series: [{
+                                name: $.Oda.I8n.get("home","graphNewClient"),
+                                data: series
+                            }]
+                        });
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportNewClient : " + er.message);
+                        return null;
+                    }
+                },
+                /**
+                 * @returns {$.Oda.App.Controller.Home}
+                 */
+                displayReportSandBox: function () {
+                    try {
+                        var strHtml = $.Oda.Display.TemplateHtml.create({
+                            template : "tlpDivReportSandBox"
+                        });
+                        $.Oda.Display.render({id:"divReport", html: strHtml});
+
+                        var req = "SELECT UNIQUE CONCAT(YEAR(workDate), '-', IF(MONTH(workDate) < 10, concat(0, MONTH(workDate)), concat(MONTH(workDate)))) month, 0 nb FROM ? \
+                        ORDER BY month \
+                         \;";
+                        var datas = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        var req = "SELECT month, count(*) nb FROM \
+                        (SELECT customer, CONCAT(YEAR(workDate), '-', IF(MONTH(workDate) < 10, concat(0, MONTH(workDate)), concat(MONTH(workDate)))) month FROM \
+                        (SELECT customer->displayName customer, MIN(workDate) workDate FROM ? GROUP BY customer->displayName)) \
+                        GROUP BY month \
+                        ORDER BY month \
+                         \;";
+                        var result = alasql(req,[$.Oda.App.Controller.BonitaActivities]);
+
+                        for(var index in datas){
+                            var elt = datas[index];
+                            for(var indexResult in result){
+                                var rec = result[indexResult];
+                                if(elt.month === rec.month){
+                                    elt.nb = rec.nb
+                                }
+                            }
+                        }
+
+                        var cate = [];
+                        for(var index in datas){
+                            var elt = datas[index];
+                            cate.push(elt.month);
+                        }
+
+                        var series = [];
+                        for(var index in datas){
+                            var elt = datas[index];
+                            series.push(elt.nb);
+                        }
+
+                        Highcharts.chart('divGraph', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: $.Oda.I8n.get("home","graphSandBox")
+                            },
+                            xAxis: {
+                                categories: cate
+                            },
+                            yAxis: {
+                                min: 0
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            series: [{
+                                name: $.Oda.I8n.get("home","graphSandBox"),
+                                data: series
+                            }]
+                        });
+                        return this;
+                    } catch (er) {
+                        $.Oda.Log.error("$.Oda.App.Controller.Home.displayReportSandBox : " + er.message);
                         return null;
                     }
                 },

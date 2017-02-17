@@ -42,7 +42,13 @@
             "completionMailThx": "MERCI de remplir ASAPPPPP :D",
             "completionMailDesc": "Voici la liste des jours pour lesquels vous n'avez pas rempli 8h.",
             "notifSendMailSuccess": "Envoi de la notification avec succès.",
-            "notifSendMailFail": "Envoi de la notification en echec, contacter votre administrateur."
+            "notifSendMailFail": "Envoi de la notification en echec, contacter votre administrateur.",
+            "btReportSandBox": "SandBox",
+            "helloSandBox": "SandBox",
+            "graphSandBox": "SandBox",
+            "btReportNewClient": "Nouveau client",
+            "helloNewClient": "Nouveau client",
+            "graphNewClient": "Nouveau client"
         }
         , "en" : {
             "title" : "Home",
@@ -82,7 +88,13 @@
             "completionMailThx": "THX to do ASAPPPPP :D",
             "completionMailDesc": "Here is the list of the days for which you did not fill 8 hours.",
             "notifSendMailSuccess": "Sending the notification successfully.",
-            "notifSendMailFail": "Sending the notification failed, contact your administrator."
+            "notifSendMailFail": "Sending the notification failed, contact your administrator.",
+            "btReportSandBox": "SandBox",
+            "helloSandBox": "SandBox",
+            "graphSandBox": "SandBox",
+            "btReportNewClient": "New client",
+            "helloNewClient": "New client",
+            "graphNewClient": "New client"
         }
     }
 ]
